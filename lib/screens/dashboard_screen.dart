@@ -29,6 +29,28 @@ class _DashboardScreenState extends State<DashboardScreen>
     return widget.expenses.map((expense) => expense.category).toSet().length;
   }
 
+  double get _monthlyTotal {
+    final now = DateTime.now();
+
+    return widget.expenses
+        .where(
+          (expense) =>
+              expense.date.year == now.year && expense.date.month == now.month,
+        )
+        .fold(0.0, (sum, expense) => sum + expense.amount);
+  }
+
+  Map<String, double> get _categoryTotals {
+    final totals = <String, double>{};
+
+    for (final expense in widget.expenses) {
+      totals[expense.category] =
+          (totals[expense.category] ?? 0) + expense.amount;
+    }
+
+    return totals;
+  }
+
   List<Expense> get _recentExpenses {
     final sorted = List<Expense>.from(widget.expenses)
       ..sort((a, b) => b.date.compareTo(a.date));
@@ -123,6 +145,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                   const SizedBox(height: 18),
 
                   _buildStats(),
+
+                  const SizedBox(height: 18),
+
+                  _buildMonthlyAndCategorySummary(),
 
                   const SizedBox(height: 28),
 
@@ -307,6 +333,90 @@ class _DashboardScreenState extends State<DashboardScreen>
             iconColor: AppTheme.mint,
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildMonthlyAndCategorySummary() {
+    final categoryTotals = _categoryTotals.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _SummaryCard(
+                title: 'This month',
+                value: 'Rs. ${_monthlyTotal.toStringAsFixed(0)}',
+                icon: Icons.calendar_month_rounded,
+                iconColor: AppTheme.lavender,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _SummaryCard(
+                title: 'Categories',
+                value: '${categoryTotals.length}',
+                icon: Icons.pie_chart_outline_rounded,
+                iconColor: AppTheme.mint,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (categoryTotals.isNotEmpty)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(17),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.045)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Category-wise spending',
+                  style: TextStyle(
+                    color: AppTheme.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ...categoryTotals.map(
+                  (entry) => Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            entry.key,
+                            style: const TextStyle(
+                              color: AppTheme.textSecondary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Rs. ${entry.value.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: AppTheme.textPrimary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }
@@ -534,6 +644,69 @@ class _StatCard extends StatelessWidget {
                   style: const TextStyle(
                     color: AppTheme.textSecondary,
                     fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SummaryCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color iconColor;
+
+  const _SummaryCard({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceSoft,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(icon, color: iconColor, size: 19),
+          ),
+          const SizedBox(width: 9),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 10,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppTheme.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],

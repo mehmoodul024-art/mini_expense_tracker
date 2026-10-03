@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import '../models/expense.dart';
 import '../theme/app_theme.dart';
 import '../widgets/expense_card.dart';
+import 'add_expense_screen.dart';
 
 class ExpenseListScreen extends StatefulWidget {
   final List<Expense> expenses;
 
   final void Function(String id) onDeleteExpense;
+  final void Function(Expense expense) onEditExpense;
 
   const ExpenseListScreen({
     super.key,
     required this.expenses,
     required this.onDeleteExpense,
+    required this.onEditExpense,
   });
 
   @override
@@ -85,6 +88,30 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
     if (result == true) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Expense added successfully.')),
+      );
+    }
+  }
+
+  Future<void> _openEditExpense(Expense expense) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddExpenseScreen(
+          expense: expense,
+          onAddExpense: widget.onEditExpense,
+        ),
+      ),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    if (result == true) {
+      setState(() {});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Expense updated successfully.')),
       );
     }
   }
@@ -295,6 +322,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                           expense: expense,
 
                           onDelete: () => _confirmDelete(expense),
+                          onEdit: () => _openEditExpense(expense),
                         );
                       },
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'models/expense.dart';
 import 'screens/add_expense_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -20,16 +21,78 @@ class ExpenseTrackerApp extends StatefulWidget {
 class _ExpenseTrackerAppState extends State<ExpenseTrackerApp> {
   final List<Expense> _expenses = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadExpenses();
+  }
+
+  Future<void> _loadExpenses() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedExpenses = prefs.getStringList('expenses');
+
+    if (savedExpenses == null) {
+      return;
+    }
+
+    try {
+      final loadedExpenses = savedExpenses.map((expenseString) {
+        final expenseMap = jsonDecode(expenseString) as Map<String, dynamic>;
+        return Expense.fromMap(expenseMap);
+      }).toList();
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _expenses
+          ..clear()
+          ..addAll(loadedExpenses);
+      });
+    } catch (_) {
+      // Ignore invalid old saved data and keep the app usable.
+    }
+  }
+
+  Future<void> _saveExpenses() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final expensesToSave = _expenses
+        .map((expense) => jsonEncode(expense.toMap()))
+        .toList();
+
+    await prefs.setStringList('expenses', expensesToSave);
+  }
+
   void _addExpense(Expense expense) {
     setState(() {
       _expenses.add(expense);
     });
+
+    _saveExpenses();
+  }
+
+  void _editExpense(Expense updatedExpense) {
+    setState(() {
+      final index = _expenses.indexWhere(
+        (expense) => expense.id == updatedExpense.id,
+      );
+
+      if (index != -1) {
+        _expenses[index] = updatedExpense;
+      }
+    });
+
+    _saveExpenses();
   }
 
   void _deleteExpense(String id) {
     setState(() {
       _expenses.removeWhere((expense) => expense.id == id);
     });
+
+    _saveExpenses();
   }
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -44,6 +107,7 @@ class _ExpenseTrackerAppState extends State<ExpenseTrackerApp> {
         page = ExpenseListScreen(
           expenses: _expenses,
           onDeleteExpense: _deleteExpense,
+          onEditExpense: _editExpense,
         );
         break;
 

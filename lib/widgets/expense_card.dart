@@ -6,12 +6,14 @@ import '../theme/app_theme.dart';
 class ExpenseCard extends StatelessWidget {
   final Expense expense;
   final VoidCallback onDelete;
+  final VoidCallback? onEdit;
   final bool showDelete;
 
   const ExpenseCard({
     super.key,
     required this.expense,
     required this.onDelete,
+    this.onEdit,
     this.showDelete = true,
   });
 
@@ -182,6 +184,22 @@ class ExpenseCard extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
+
+                if (onEdit != null)
+                  SizedBox(
+                    width: 34,
+                    height: 34,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      tooltip: 'Edit',
+                      onPressed: onEdit,
+                      icon: const Icon(
+                        Icons.edit_outlined,
+                        size: 18,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                  ),
 
                 if (showDelete)
                   SizedBox(
