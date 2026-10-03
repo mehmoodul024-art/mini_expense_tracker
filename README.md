@@ -1,75 +1,127 @@
-# Mini Expense Tracker
+# Spendly — Mini Expense Tracker
 
-A simple and user-friendly expense tracking application developed using **Flutter and Dart**. The application allows users to manage and keep track of their daily expenses through a clean and simple interface.
-
-## Live Demo
-
-https://mini-expense-tracker-beige.vercel.app/
-
-## GitHub Repository
-
-https://github.com/mehmoodul024-art/mini_expense_tracker
-
-## Project Overview
-
-The Mini Expense Tracker is a Flutter-based application designed to help users record and monitor their expenses. It provides a simple interface for entering expenses and viewing expense information.
-
-The project was developed as a software engineering project to practice Flutter development, Dart programming, UI design, application structure, and basic expense management functionality.
+Spendly is a simple Flutter-based expense tracking application developed as part of my Flutter internship. The app allows users to record, manage, search, filter, and delete expenses through a clean and simple interface.
 
 ## Features
 
-* Add and record expenses
-* View expense information
-* Track total expenses
-* Simple and clean user interface
-* Responsive Flutter web interface
-* Easy-to-use navigation
-* Blue and white modern theme
+* Dashboard with total expense overview
+* Add new expenses
+* Edit existing expenses
+* Delete expenses
+* View all recorded expenses
+* Search expenses by title
+* Filter expenses by category
+* Select expense date using a date picker
+* Expense categories:
+
+  * Food
+  * Transport
+  * Shopping
+  * Bills
+  * Education
+  * Entertainment
+  * Other
+* Total expense calculation
+* Form validation for title and amount
+* Local data persistence using SharedPreferences
+* Material 3 user interface
+* Responsive Flutter Web interface
+* Production deployment through Vercel
+
+## Expense Information
+
+Each expense contains:
+
+* Title
+* Amount
+* Category
+* Date
+* Unique ID
 
 ## Technologies Used
 
-* **Flutter**
-* **Dart**
-* **Material Design**
-* **Flutter Web**
+* Flutter
+* Dart
+* Material 3
+* SharedPreferences
+* Flutter Web
+* Vercel
+* GitHub
 
 ## Project Structure
 
 ```text
-lib/
-├── main.dart
-├── core/
-├── data/
-├── screens/
-├── widgets/
-└── ...
-
-test/
-└── ...
-
-web/
-└── Flutter web configuration
-
-build/
-└── web/
-    ├── index.html
-    ├── main.dart.js
-    ├── assets/
-    └── ...
+mini_expense_tracker/
+│
+├── lib/
+│   ├── main.dart
+│   │
+│   ├── models/
+│   │   └── expense.dart
+│   │
+│   ├── screens/
+│   │   ├── add_expense_screen.dart
+│   │   ├── dashboard_screen.dart
+│   │   └── expense_list_screen.dart
+│   │
+│   ├── widgets/
+│   │   └── expense_card.dart
+│   │
+│   └── theme/
+│       └── app_theme.dart
+│
+├── build/
+│   └── web/
+│
+├── pubspec.yaml
+└── README.md
 ```
 
-## Getting Started
+## How the Application Works
 
-### Prerequisites
+### Dashboard
 
-Before running the project, make sure you have:
+The dashboard provides an overview of the user's expenses and gives access to the main expense-management features.
 
-* Flutter SDK installed
-* Dart SDK
-* VS Code or another suitable IDE
-* A web browser such as Google Chrome
+### Add Expense
 
-### Installation
+Users can enter:
+
+1. Expense amount
+2. Expense title
+3. Category
+4. Date
+
+The form validates the entered information before saving the expense.
+
+### Expense List
+
+The expense list displays all saved expenses. Users can:
+
+* Search for an expense
+* Filter expenses by category
+* Edit an expense
+* Delete an expense
+
+### Local Storage
+
+Expense data is stored locally using SharedPreferences. This allows the saved expenses to remain available after closing and reopening the application.
+
+## Validation
+
+The application validates user input before saving an expense.
+
+Examples include:
+
+* Amount cannot be empty.
+* Amount must be a valid number.
+* Amount must be greater than zero.
+* Expense title cannot be empty.
+* Expense title must contain at least two characters.
+
+## Running the Project
+
+Make sure Flutter is installed and configured correctly.
 
 Clone the repository:
 
@@ -77,13 +129,13 @@ Clone the repository:
 git clone https://github.com/mehmoodul024-art/mini_expense_tracker.git
 ```
 
-Navigate to the project directory:
+Open the project:
 
 ```bash
 cd mini_expense_tracker
 ```
 
-Get the Flutter dependencies:
+Get the dependencies:
 
 ```bash
 flutter pub get
@@ -92,51 +144,102 @@ flutter pub get
 Run the application:
 
 ```bash
+flutter run
+```
+
+To run the project as a web application:
+
+```bash
 flutter run -d chrome
 ```
 
 ## Building for Web
 
-To create a production web build:
+To generate the Flutter Web production build:
 
 ```bash
 flutter build web
 ```
 
-The generated web files will be available in:
+The generated files are placed inside:
 
 ```text
 build/web
 ```
 
-## How to Use
-
-1. Open the application.
-2. Navigate through the dashboard.
-3. Add an expense using the expense entry option.
-4. Enter the required expense details.
-5. Save the expense.
-6. View the updated expense information and total amount.
-
-## Purpose of the Project
-
-The main purpose of this project is to demonstrate practical knowledge of:
-
-* Flutter application development
-* Dart programming
-* Widget-based UI development
-* Navigation between screens
-* Basic application architecture
-* Web deployment
-* Git and GitHub version control
-
 ## Deployment
 
-The Flutter web application is deployed using **Vercel**.
+The project is connected to GitHub and deployed on Vercel.
 
-Live application:
+GitHub Repository:
 
-https://mini-expense-tracker-beige.vercel.app/
+[https://github.com/mehmoodul024-art/mini_expense_tracker](https://github.com/mehmoodul024-art/mini_expense_tracker?utm_source=chatgpt.com)
+
+Live Demo:
+
+[https://miniexpensetracker-five.vercel.app/](https://miniexpensetracker-five.vercel.app/?utm_source=chatgpt.com)
+
+The `main` branch is connected to Vercel, so new commits pushed to GitHub can trigger a new production deployment.
+
+## What I Learned
+
+During the development of this project, I worked with:
+
+* Flutter application structure
+* StatefulWidget and state management
+* Navigation between screens
+* Form validation
+* Date selection
+* Expense filtering and searching
+* CRUD operations for expenses
+* Local data persistence using SharedPreferences
+* Flutter Web builds
+* Git and GitHub
+* Vercel deployment
+* Debugging Flutter and Gradle-related issues
+
+## Day 2 Work
+
+The Day 2 task focused on improving the basic expense tracker by implementing proper expense management functionality.
+
+Completed work included:
+
+* Add expense
+* View expense list
+* Edit expense
+* Delete expense
+* Category selection
+* Date selection
+* Total expense calculation
+* Input validation
+* Search and filtering functionality
+
+## Day 3 Work
+
+The Day 3 work focused on improving the application and making it more practical for continued use.
+
+Completed improvements included:
+
+* Local expense persistence using SharedPreferences
+* Improved expense management
+* Search and category filtering
+* Edit and delete functionality
+* Improved user interface
+* Flutter Web production build
+* GitHub repository update
+* Vercel production deployment
+
+## Future Improvements
+
+Possible future improvements include:
+
+* Cloud database integration
+* User authentication
+* Expense charts and analytics
+* Monthly spending reports
+* Budget management
+* Exporting expenses
+* Cloud synchronization
 
 ## Author
 
@@ -144,7 +247,3 @@ https://mini-expense-tracker-beige.vercel.app/
 
 BS Software Engineering
 COMSATS University Islamabad, Wah Campus
-
-## License
-
-This project was created for educational and academic purposes.
